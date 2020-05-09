@@ -136,22 +136,11 @@ Be aware that a nil value will make tramp display very slow."
                      (cl-loop for file in (helm-marked-candidates)
                               do (setq recentf-list (delete file recentf-list)))))))))
 
-(defvar helm-source-recentf nil
-  "See (info \"(emacs)File Conveniences\").
-Set `recentf-max-saved-items' to a bigger value if default is too small.")
+(defvar helm-source-recentf
+  ;;"Enable fuzzy matching in `helm-source-recentf' when non--nil."
+  (helm-make-source "Recentf" 'helm-recentf-source
+    :fuzzy-match t))
 
-(defcustom helm-recentf-fuzzy-match nil
-  "Enable fuzzy matching in `helm-source-recentf' when non--nil."
-  :group 'helm-files
-  :type 'boolean
-  :set (lambda (var val)
-         (set var val)
-         (let ((helm-fuzzy-sort-fn 'helm-fuzzy-matching-sort-fn-preserve-ties-order))
-           (setq helm-source-recentf
-                 (helm-make-source "Recentf" 'helm-recentf-source
-                   :fuzzy-match helm-recentf-fuzzy-match)))))
-
-
 ;;; Files in current dir
 ;;
 ;;
@@ -215,6 +204,8 @@ Colorize only symlinks, directories and files."
 (defvar helm-source-files-in-current-dir
   (helm-make-source "Files from Current Directory"
       'helm-files-in-current-dir-source))
+
+
 
 ;;;###autoload
 (defun helm-for-files ()
